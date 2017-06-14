@@ -1,6 +1,8 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * Index `View`
+ * changes:
+ * Added the react navigation to the thing and the route names for the navigation
+ * Fixed the render function that was using the App module and has been changed to view
  * @flow
  */
 
@@ -9,32 +11,54 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  AsyncStorage
 } from 'react-native';
+import Start from './src/start';
 import App from './src/app';
 import Details from './src/details';
 import { StackNavigator } from 'react-navigation';
-import firebase from 'firebase';
+import { Toast } from 'native-base';
+var login;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBpSEuxpv7nIPjv2Df8Xcq6dS9c2LYzELo",
-  authDomain: "",
-  databaseURL: "https://places2meet.firebaseio.com/",
-  storageBucket: "gs://places2meet.appspot.com/",
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const RootNav = StackNavigator({
+  Start: { screen: Start },
+  App: { screen: App },
+  Details: { screen: Details }
+}, {
+  initialRouteName : 'Start'
+});
+
+const RootNavLogged = StackNavigator ({
+  App: { screen: App },
+  Details: { screen: Details }
+}, {
+  initialRouteName : 'App'
+});
 
 export default class Places2Meet extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      username: null
+    }
+  }
+  componentWillMount() {
+    AsyncStorage.getItem("login").then((value) => {
+        this.setState({username: value});
+    }).done();
+  }
   render() {
-    return (
-      <App />
-    );
+    if (this.state.username !== null) {
+      return <RootNavLogged />;
+    }
+    else {
+      return <RootNav />;
+    }
   }
 }
 
-const SimpleApp = StackNavigator({
-  Home: { screen: App  },
-  Details: { screen: Details }
-});
 
-AppRegistry.registerComponent('Places2Meet', () => SimpleApp);
+
+AppRegistry.registerComponent('Places2Meet', () => Places2Meet);
