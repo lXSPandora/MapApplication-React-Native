@@ -112,8 +112,8 @@ export default class Start extends Component {
         </Content>
       </Container>
      );
-    }
-  }
+   }
+}
 
 
 const styles = StyleSheet.create({
