@@ -11,9 +11,20 @@ import {
   StyleSheet,
   TextInput,
   AlertIOS,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
-import { Button, Input, Item, Grid, Col, Content, Text, Label, Container, Toast } from 'native-base';
+import {
+  Button,
+  Input,
+  Item,
+  Grid,
+  Col,
+  Content,
+  Text,
+  Label,
+  Container,
+  Toast,
+} from 'native-base';
 import * as firebase from 'firebase';
 import App from './app';
 
@@ -24,7 +35,6 @@ const config = {
   storageBucket: 'gs://places2meet-9e002.appspot.com/',
 };
 var firebaseApp = firebase.initializeApp(config);
-
 
 export default class Start extends Component {
   constructor(props) {
@@ -39,22 +49,23 @@ export default class Start extends Component {
   };
 
   componentWillMount = () => {
-    AsyncStorage.getItem("login").then((value) => {
+    AsyncStorage.getItem('login')
+      .then(value => {
         login = value;
-    }).done();
-  }
+      })
+      .done();
+  };
 
   render() {
-    let insert_user = (username) => {
+    let insert_user = username => {
       if (username === '') {
         Toast.show({
-          supportedOrientations: ['portrait','landscape'],
+          supportedOrientations: ['portrait', 'landscape'],
           text: 'Please fill the username field to continue',
           position: 'bottom',
-          buttonText: 'Okay'
+          buttonText: 'Okay',
         });
-      }
-      else {
+      } else {
         const postData = {
           username: username,
           latlng: {
@@ -68,53 +79,66 @@ export default class Start extends Component {
           //Write the new post's data simultaneosly in the users list
           let updates = {};
           updates['/users/' + newPostKey] = postData; //posting the data to the firebase server
-          AsyncStorage.setItem("login", username);
+          AsyncStorage.setItem('login', username);
           this.props.navigation.navigate('App');
           return this.itemsRef.update(updates);
           Toast.show({
             supportedOrientations: ['portrait', 'landscape'],
             text: `Usuario inserido com sucesso`,
             position: 'bottom',
-            buttonText: 'Dismiss'
+            buttonText: 'Dismiss',
           });
-        }
-        catch (e) {
+        } catch (e) {
           Toast.show({
-            supportedOrientations: ['portrait','landscape'],
+            supportedOrientations: ['portrait', 'landscape'],
             text: `Oops! Ocorreu um erro durante o processamento de sua solicitação ${'\n'}Descricao do erro: ${e.message}`,
             position: 'bottom',
-            buttonText: 'Okay'
+            buttonText: 'Okay',
           });
         }
       }
-    }
+    };
     return (
       <Container>
         <Content contentContainerStyle={styles.container}>
-          <Grid style={{alignItems: 'center'}}>
-            <Col style={{padding: 20, alignItems: 'center'}}>
-              <Text style={{color: '#FFFFFF', fontSize: 20, textAlign: 'center'}}>
+          <Grid style={{ alignItems: 'center' }}>
+            <Col style={{ padding: 20, alignItems: 'center' }}>
+              <Text
+                style={{ color: '#FFFFFF', fontSize: 20, textAlign: 'center' }}
+              >
                 Welcome To Places2Meet{'\n'}
               </Text>
-              <Text style={{color: '#FFFFFF', fontSize: 16, textAlign: 'center'}}>
-                Here's a SimpleApp to see all users location, and the people that are online{'\n'}
+              <Text
+                style={{ color: '#FFFFFF', fontSize: 16, textAlign: 'center' }}
+              >
+                Here's a SimpleApp to see all users location, and the people
+                that are online{'\n'}
               </Text>
               <Item floatingLabel>
-                <Label style={{color: '#FFFFFF'}}>Username</Label>
-                <Input style={{color: '#FFFFFF'}} onChangeText={(username) => this.setState({username})} />
+                <Label style={{ color: '#FFFFFF' }}>Username</Label>
+                <Input
+                  style={{ color: '#FFFFFF' }}
+                  onChangeText={username => this.setState({ username })}
+                />
               </Item>
-              <Text>{'\n'}</Text>
-              <Button block rounded primary onPress={() => insert_user(this.state.username)}>
+              <Text>
+                {'\n'}
+              </Text>
+              <Button
+                block
+                rounded
+                primary
+                onPress={() => insert_user(this.state.username)}
+              >
                 <Text>Lets do this!!</Text>
               </Button>
             </Col>
           </Grid>
         </Content>
       </Container>
-     );
-   }
+    );
+  }
 }
-
 
 const styles = StyleSheet.create({
   container: {

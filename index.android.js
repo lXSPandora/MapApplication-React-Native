@@ -12,7 +12,7 @@ import {
   StyleSheet,
   Text,
   View,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
 import Start from './src/start';
 import App from './src/app';
@@ -21,44 +21,49 @@ import { StackNavigator } from 'react-navigation';
 import { Toast } from 'native-base';
 var login;
 
-const RootNav = StackNavigator({
-  Start: { screen: Start },
-  App: { screen: App },
-  Details: { screen: Details }
-}, {
-  initialRouteName : 'Start'
-});
+const RootNav = StackNavigator(
+  {
+    Start: { screen: Start },
+    App: { screen: App },
+    Details: { screen: Details },
+  },
+  {
+    initialRouteName: 'Start',
+  },
+);
 
-const RootNavLogged = StackNavigator ({
-  App: { screen: App },
-  Details: { screen: Details }
-}, {
-  initialRouteName : 'App'
-});
+const RootNavLogged = StackNavigator(
+  {
+    App: { screen: App },
+    Details: { screen: Details },
+  },
+  {
+    initialRouteName: 'App',
+  },
+);
 
 export default class Places2Meet extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: null
-    }
+      username: null,
+    };
   }
   componentWillMount() {
-    AsyncStorage.getItem("login").then((value) => {
-        this.setState({username: value});
-    }).done();
+    AsyncStorage.getItem('login')
+      .then(value => {
+        this.setState({ username: value });
+      })
+      .done();
   }
   render() {
     if (this.state.username !== null) {
       return <RootNavLogged />;
-    }
-    else {
+    } else {
       return <RootNav />;
     }
   }
 }
-
-
 
 AppRegistry.registerComponent('Places2Meet', () => Places2Meet);
